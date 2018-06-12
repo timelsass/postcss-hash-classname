@@ -34,11 +34,13 @@ function renameNodes(nodes, sourcePath, opts, mappings) {
   return nodes.map(function(node) {
     // Process CSS node
     if (node.type === 'class') {
-      // Process "class" node
-      var orgValue = node.value,
-          newValue = renameClassNode(node.value, sourcePath, opts);
-      // Edit node and store mapping of classname renaming
-      node.value = mappings[orgValue] = newValue;
+      if ( ! node.value.match( /[\d]+%+/ ) ) {
+        // Process "class" node
+        var orgValue = node.value,
+            newValue = renameClassNode(node.value, sourcePath, opts);
+        // Edit node and store mapping of classname renaming
+        node.value = mappings[orgValue] = newValue;
+      }
     } else if (node.type === 'pseudo' && node.value === ':not') {
       // Process ":not([selector])" pseudo node
       renameNodes(node.nodes, sourcePath, opts, mappings);
